@@ -1,0 +1,28 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer: 
+  exclude: [lib/**.g.dart]  # .g.dart 파일 예외 처리
+
+  # error 등급
+  # 0: ignore - 무시
+  # 1: warning - 노랑
+  # 2: error - 빨강
+  # 3: info - 파랑
+  errors:
+    # avoid_print: error
+    avoid_print: info
+
+  plugins: 
+    - custom_lint
+
+linter:
+  rules:
+    avoid_print: false
+
+
+custom_lint:
+  rules:
+    # Enable one rule
+    - provider_parameters
+    # Disable another
+    - missing_provider_scope: false
