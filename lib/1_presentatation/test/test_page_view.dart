@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_calendar/1_presentatation/login_page/login_page_view_model.dart';
@@ -59,6 +60,7 @@ class LoginTest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var temp = {ref.watch(eventProvider).events};
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -94,6 +96,35 @@ class LoginTest extends ConsumerWidget {
               },
               child: Text('Calendar')),
           Text('calendar : ${ref.watch(eventProvider).events}'),
+          SizedBox(height: 20),
+          // SingleChildScrollView(
+          //   child:
+          //   ,
+          // child: ListView.separated(
+          //     shrinkWrap: true,
+          //     itemBuilder: (context, index) {
+          //       // return ListTile(
+          //       //   title: Text('11 ${temp.contains('202404')}'),
+          //       // );
+          //       for (var map in temp) {
+          //         for (var entry in map!.entries) {
+          //           String key = entry.key;
+          //           List<Event> events = entry.value;
+          //           for (var event in events) {
+          //             return ListTile(
+          //               title: Text('11 ${event.eventContent}'),
+          //             );
+          //           }
+          //         }
+          //       }
+          //     },
+          //     separatorBuilder: (context, index) {
+          //       return SizedBox(
+          //         height: 20,
+          //       );
+          //     },
+          //     itemCount: temp.length),
+          // ),
         ],
       ),
     );
