@@ -15,18 +15,19 @@ class EventNotifier extends Notifier<EventState> {
   }
 
   void setEvents() async {
-    print('(((((())))))event_view_model.dart: setEvents:');
+    print('### event_view_model.dart: setEvents:');
     //event 추가
     var result =
         await ref.read(eventRepos.eventRepositoryProvider).getEventMonth();
     // state = state.copyWith(events: <String, List<Event>>{});
     // print('(((((())))))event_view_model.dart: setEvents: ${state.events}');
     state = state.copyWith(events: Map.of(result));
-    print('--------------------');
-    print(result.length);
-    print(result[0]);
-    print(result.runtimeType); // List<dynamic>
-    print(result[0].runtimeType); // _Map<String, dynamic>
+    // print('--------------------');
+    // print(result.length);
+    // print(result[0]);
+    // print(result.runtimeType); // List<dynamic>
+    // print(result[0].runtimeType); // _Map<String, dynamic>
+
     // print(result[0]["EVENT_CONTENTS"]); // go home now
     // result.forEach((element) {
     //   state = state.copyWith(events: <String, List<Event>>{
@@ -41,8 +42,9 @@ class EventNotifier extends Notifier<EventState> {
     //     ],
     //   });
     // });
+
     // state = state.copyWith(events: result);
-    print('state.events: ${state.events}');
+    // print('state.events: ${state.events}');
   }
 
   void clearEvents() {

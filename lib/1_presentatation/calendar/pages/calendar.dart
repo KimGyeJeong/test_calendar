@@ -1,65 +1,110 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:test_calendar/1_presentatation/calendar/calendar_view_model.dart'
-    as calendar_model;
+import 'package:test_calendar/1_presentatation/calendar/calendar_view_model.dart';
 
-class TableBasics extends StatefulWidget {
+class TableBasics extends ConsumerStatefulWidget {
   const TableBasics({super.key});
 
   @override
-  State<TableBasics> createState() => _TableBasicsState();
+  ConsumerState<TableBasics> createState() => _TableBasicsState();
 }
 
-class _TableBasicsState extends State<TableBasics> {
+class _TableBasicsState extends ConsumerState<TableBasics> {
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
 
-  Map<DateTime, List<Event>> events = {
-    DateTime.utc(2024, 4, 3): [
-      Event(
-        eventIndex: 1,
-        eventUser: 1,
-        eventTime: DateTime.utc(2024, 4, 3),
-        eventContent: 'Event 1',
-      ),
-      Event(
-        eventIndex: 2,
-        eventUser: 2,
-        eventTime: DateTime.utc(2024, 4, 3),
-        eventContent: 'Event 2',
-      ),
-    ],
-    DateTime.utc(2024, 4, 6): [
-      Event(
-        eventIndex: 3,
-        eventUser: 3,
-        eventContent: 'Event 3',
-      ),
-      Event(
-        eventIndex: 4,
-        eventUser: 4,
-        eventTime: DateTime.utc(2024, 4, 6),
-        eventContent: 'Event 4',
-      ),
-      Event(
-        eventIndex: 5,
-        eventUser: 5,
-        eventTime: DateTime.utc(2024, 4, 6),
-        eventContent: 'Event 5',
-      ),
-    ],
-  };
+  Map<String, List<Event>> events = {};
 
-  List<Event> getEventsForDay(DateTime day) {
-    return events[day] ?? [];
+  @override
+  void initState() {
+    super.initState();
+    // ref.read(eventProvider.notifier).setEvents();
+    temp();
   }
 
   @override
+  void dispose() {
+    ref.read(eventProvider.notifier).clearEvents();
+    super.dispose();
+  }
+
+  void temp() async {
+    print('### tempcalled()');
+    ref.read(eventProvider.notifier).setEvents();
+    events = await ref.watch(eventProvider).events!;
+  }
+
+  // Map<DateTime, List<Event>> events = {
+  //   DateTime.utc(2024, 4, 3): [
+  //     Event(
+  //       eventIndex: 1,
+  //       eventUser: 1,
+  //       eventTime: DateTime.utc(2024, 4, 3),
+  //       eventContent: 'Event 1',
+  //     ),
+  //     Event(
+  //       eventIndex: 2,
+  //       eventUser: 2,
+  //       eventTime: DateTime.utc(2024, 4, 3),
+  //       eventContent: 'Event 2',
+  //     ),
+  //   ],
+  //   DateTime.utc(2024, 4, 6): [
+  //     Event(
+  //       eventIndex: 3,
+  //       eventUser: 3,
+  //       eventContent: 'Event 3',
+  //     ),
+  //     Event(
+  //       eventIndex: 4,
+  //       eventUser: 4,
+  //       eventTime: DateTime.utc(2024, 4, 6),
+  //       eventContent: 'Event 4',
+  //     ),
+  //     Event(
+  //       eventIndex: 5,
+  //       eventUser: 5,
+  //       eventTime: DateTime.utc(2024, 4, 6),
+  //       eventContent: 'Event 5',
+  //     ),
+  //   ],
+  // };
+
+  // List<Event> getEventsForDay(DateTime day) {
+  //   return events[day] ?? [];
+  // }
+
+  @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Calendar(),
+        SizedBox(
+          height: 20,
+        ),
+        Text('data : ${events['202404']?.first.eventContent ?? 'no data'}'),
+        SizedBox(
+          height: 20,
+        ),
+        IconButton(
+            onPressed: () {
+              print('#### FLOATING ACTION BUTTON ####');
+              // temp();
+              // ref.read(eventProvider.notifier).setEvents();
+              print('#### temp : $events');
+              print('#### temp222 : ${ref.watch(eventProvider).events}');
+            },
+            icon: Icon(Icons.add)),
+      ],
+    );
+  }
+
+  TableCalendar<dynamic> Calendar() {
     return TableCalendar(
       calendarBuilders: CalendarBuilders(
         dowBuilder: (context, day) {
@@ -132,21 +177,29 @@ class _TableBasicsState extends State<TableBasics> {
         //   return [];
         // }
         // return calendar_model.getEventsForDay(day);
-        return getEventsForDay(day);
+        // return getEventsForDay(day);
+        // return [];
+        // ref.read(eventProvider.notifier).setEvents();
+        // events = ref.watch(eventProvider).events!;
+
+        // print('#### eventLoader : ${events['202404']}');
+        temp();
+        print('### eventloader ${events['202404']}');
+        return [events['202404'] ?? []];
       },
     );
   }
 }
 
-class Event {
-  final int eventIndex;
-  final int eventUser;
-  DateTime? eventTime;
-  final String eventContent;
-  Event({
-    required this.eventIndex,
-    required this.eventUser,
-    this.eventTime = null,
-    required this.eventContent,
-  });
-}
+// class Event {
+//   final int eventIndex;
+//   final int eventUser;
+//   DateTime? eventTime;
+//   final String eventContent;
+//   Event({
+//     required this.eventIndex,
+//     required this.eventUser,
+//     this.eventTime = null,
+//     required this.eventContent,
+//   });
+// }
