@@ -20,7 +20,7 @@ class EventNotifier extends Notifier<EventState> {
     var result =
         await ref.read(eventRepos.eventRepositoryProvider).getEventMonth();
     // state = state.copyWith(events: <String, List<Event>>{});
-    // print('(((((())))))event_view_model.dart: setEvents: ${state.events}');
+    print('@@@ event_view_model.dart: setEvents: ${state.events}');
     state = state.copyWith(events: Map.of(result));
     // print('--------------------');
     // print(result.length);

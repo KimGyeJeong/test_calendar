@@ -29,55 +29,40 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
 
   @override
   void dispose() {
-    ref.read(eventProvider.notifier).clearEvents();
+    // ref.read(eventProvider.notifier).clearEvents();
     super.dispose();
   }
 
-  void temp() async {
+  Future<void> temp() async {
     print('### tempcalled()');
     ref.read(eventProvider.notifier).setEvents();
-    events = await ref.watch(eventProvider).events!;
+    events = ref.watch(eventProvider).events!;
+
+    Future.delayed(Duration(seconds: 1), () {
+      print('### tempcalled() : ${events['202404']?.first.eventContent}');
+    });
+
+    print('@@@ temp : $events');
   }
 
-  // Map<DateTime, List<Event>> events = {
-  //   DateTime.utc(2024, 4, 3): [
-  //     Event(
-  //       eventIndex: 1,
-  //       eventUser: 1,
-  //       eventTime: DateTime.utc(2024, 4, 3),
-  //       eventContent: 'Event 1',
-  //     ),
-  //     Event(
-  //       eventIndex: 2,
-  //       eventUser: 2,
-  //       eventTime: DateTime.utc(2024, 4, 3),
-  //       eventContent: 'Event 2',
-  //     ),
-  //   ],
-  //   DateTime.utc(2024, 4, 6): [
-  //     Event(
-  //       eventIndex: 3,
-  //       eventUser: 3,
-  //       eventContent: 'Event 3',
-  //     ),
-  //     Event(
-  //       eventIndex: 4,
-  //       eventUser: 4,
-  //       eventTime: DateTime.utc(2024, 4, 6),
-  //       eventContent: 'Event 4',
-  //     ),
-  //     Event(
-  //       eventIndex: 5,
-  //       eventUser: 5,
-  //       eventTime: DateTime.utc(2024, 4, 6),
-  //       eventContent: 'Event 5',
-  //     ),
-  //   ],
-  // };
-
-  // List<Event> getEventsForDay(DateTime day) {
-  //   return events[day] ?? [];
-  // }
+  List<Event> getEventsForDay(String day) {
+    String days = day.substring(1, 6);
+    print('### getEventsForDay : $day');
+    print('### getEventsForDay. : ${events[days]}');
+    // ref.read(eventProvider.notifier).setEvents();
+    events = ref.watch(eventProvider).events!;
+    print('### getEventsForDay.... : ${events[days]}');
+    events.forEach((key, value) {
+      print('### key : $key, value : $value');
+      value.forEach((element) {
+        print('### element : ${element.eventIndex}');
+        print('### element : ${element.eventTime}');
+        print('### element : ${element.eventUser}');
+        print('### element : ${element.eventContent}');
+      });
+    });
+    return events[day] ?? [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +79,7 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
         IconButton(
             onPressed: () {
               print('#### FLOATING ACTION BUTTON ####');
-              // temp();
-              // ref.read(eventProvider.notifier).setEvents();
+              temp();
               print('#### temp : $events');
               print('#### temp222 : ${ref.watch(eventProvider).events}');
             },
@@ -183,9 +167,17 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
         // events = ref.watch(eventProvider).events!;
 
         // print('#### eventLoader : ${events['202404']}');
-        temp();
-        print('### eventloader ${events['202404']}');
-        return [events['202404'] ?? []];
+        // temp();
+        // print('### eventloader ${events['202404']!.first.eventContent}');
+        // return [events['202404']!.first.eventTime ?? []];
+
+        // getEventsForDay(day);
+
+        return getEventsForDay(DateFormat('yyyyMMdd').format(day))
+            .map((e) => e.eventTime)
+            .toList();
+
+        // return [1];
       },
     );
   }
