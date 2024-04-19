@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -46,21 +48,26 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
   }
 
   List<Event> getEventsForDay(String day) {
-    String days = day.substring(1, 6);
+    String days = day.substring(0, 6);
+
     print('### getEventsForDay : $day');
-    print('### getEventsForDay. : ${events[days]}');
+    // print('### getEventsForDay. : ${events[days]}');
+    print('### getEventsForDay. : ${events[day]}');
     // ref.read(eventProvider.notifier).setEvents();
     events = ref.watch(eventProvider).events!;
-    print('### getEventsForDay.... : ${events[days]}');
-    events.forEach((key, value) {
-      print('### key : $key, value : $value');
-      value.forEach((element) {
-        print('### element : ${element.eventIndex}');
-        print('### element : ${element.eventTime}');
-        print('### element : ${element.eventUser}');
-        print('### element : ${element.eventContent}');
-      });
-    });
+    // print('### getEventsForDay.... : ${events[days]}');
+    // events.forEach((key, value) {
+    //   print('### key : $key, value : $value');
+    //   print('### events[$days] : ${events[days]}');
+    //   value.forEach((element) {
+    //     print('### element eventIndex : ${element.eventIndex}');
+    //     print('### element eventTime : ${element.eventTime}');
+    //     print('### element eventUser : ${element.eventUser}');
+    //     print('### element eventContent : ${element.eventContent}');
+    //   });
+    // });
+
+    // return events[days] ?? [];
     return events[day] ?? [];
   }
 
@@ -91,6 +98,15 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
   TableCalendar<dynamic> Calendar() {
     return TableCalendar(
       calendarBuilders: CalendarBuilders(
+        // // ADD 2024.04.20
+        // 달력의 날짜 아래 이벤트 표시들
+        // markerBuilder: ((context, day, events) {
+        //   if (events.isNotEmpty) {
+        //     List eventevents = events;
+        //     return Text('### ${eventevents.length}');
+        //   }
+        // }),
+        // Add 2024.04.20 end
         dowBuilder: (context, day) {
           if (day.weekday == DateTime.sunday) {
             final text = DateFormat.E().format(day);
@@ -149,6 +165,7 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
       onPageChanged: (focusedDay) {
         // No need to call `setState()` here
         print("@@@@ onPageChanged focusedDay : $focusedDay");
+        ref.read(eventProvider.notifier).setEvents();
         _focusedDay = focusedDay;
       },
       // locale: 'ko_KR',
@@ -173,11 +190,11 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
 
         // getEventsForDay(day);
 
-        return getEventsForDay(DateFormat('yyyyMMdd').format(day))
-            .map((e) => e.eventTime)
-            .toList();
+        // return getEventsForDay(DateFormat('yyyyMMdd').format(day))
+        //     .map((e) => e.eventTime)
+        //     .toList();
 
-        // return [1];
+        return getEventsForDay(DateFormat('yyyyMMdd').format(day));
       },
     );
   }

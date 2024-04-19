@@ -50,14 +50,3 @@ class _CalendarStartState extends State<CalendarStart> {
         ));
   }
 }
-
-/////////
-///
-class Calendar222 extends StatelessWidget {
-  const Calendar222({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: SafeArea(child: Text('222')));
-  }
-}
