@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 // import 'package:table_calendar/table_calendar.dart';
 // import 'package:go_router/go_router.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,13 +77,46 @@ class SetEvent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final formKey = GlobalKey<FormState>();
     return Column(
       children: [
-        Text(ref.watch(calendarProvider).selectedDay.toString()),
+        Text(DateFormat("yyyy-MM-dd")
+            .format(ref.watch(calendarProvider).selectedDay ?? DateTime.now())),
         SizedBox(height: 20),
         TextField(
           decoration: InputDecoration(hintText: 'Event Content'),
         ),
+        SizedBox(height: 20),
+        Form(
+          key: formKey,
+          child: TextFormField(
+            onTap: () {
+              FocusScope.of(context).requestFocus(FocusNode());
+              print('123123');
+            },
+            decoration: InputDecoration(hintText: 'Event Content'),
+            onSaved: (inputContent) => ref
+                .read(calendarProvider.notifier)
+                .setInputEventContent(inputContent!),
+          ),
+        ),
+        Row(
+          children: [
+            TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  print('#### CANCEL BUTTON ####');
+                },
+                child: Text('CANCEL')),
+            TextButton(
+                onPressed: () {
+                  formKey.currentState!.save();
+                  Navigator.pop(context);
+                  formKey.currentState!.reset();
+                },
+                child: Text('SAVE')),
+          ],
+        )
       ],
     );
   }
