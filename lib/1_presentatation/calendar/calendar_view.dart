@@ -70,14 +70,32 @@ class _CalendarStartState extends State<CalendarStart> {
   }
 }
 
-class SetEvent extends ConsumerWidget {
+class SetEvent extends ConsumerStatefulWidget {
   const SetEvent({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final formKey = GlobalKey<FormState>();
+  ConsumerState<SetEvent> createState() => _SetEventState();
+}
+
+class _SetEventState extends ConsumerState<SetEvent> {
+  late final TextEditingController _eventContentController;
+
+  @override
+  void initState() {
+    _eventContentController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _eventContentController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Text(DateFormat("yyyy-MM-dd")
@@ -85,21 +103,9 @@ class SetEvent extends ConsumerWidget {
         SizedBox(height: 20),
         TextField(
           decoration: InputDecoration(hintText: 'Event Content'),
+          controller: _eventContentController,
         ),
         SizedBox(height: 20),
-        Form(
-          key: formKey,
-          child: TextFormField(
-            onTap: () {
-              FocusScope.of(context).requestFocus(FocusNode());
-              print('123123');
-            },
-            decoration: InputDecoration(hintText: 'Event Content'),
-            onSaved: (inputContent) => ref
-                .read(calendarProvider.notifier)
-                .setInputEventContent(inputContent!),
-          ),
-        ),
         Row(
           children: [
             TextButton(
@@ -110,9 +116,18 @@ class SetEvent extends ConsumerWidget {
                 child: Text('CANCEL')),
             TextButton(
                 onPressed: () {
-                  formKey.currentState!.save();
                   Navigator.pop(context);
-                  formKey.currentState!.reset();
+                  print('#### SAVE BUTTON ####');
+                  print(
+                      '#### _eventContentController.text: ${_eventContentController.text}');
+                  ref
+                      .read(calendarProvider.notifier)
+                      .setInputEventContent(_eventContentController.text);
+
+                  ref.read(calendarProvider.notifier).saveEvents(
+                      1,
+                      ref.watch(calendarProvider).selectedDay ?? DateTime.now(),
+                      ref.watch(calendarProvider).inputEventContent ?? 'none');
                 },
                 child: Text('SAVE')),
           ],

@@ -41,6 +41,18 @@ class EventRepos {
     }
     return events;
   }
+
+  Future<String> saveEvent(
+      int userIndex, DateTime eventTime, String eventContent) async {
+    String result = await api.saveEvent(Events(
+        month: '',
+        eventIndex: 0,
+        eventUserIndex: userIndex,
+        eventTime: eventTime,
+        eventContent: eventContent,
+        eventUserNickname: ''));
+    return 'saveOk';
+  }
 }
 
 final api = () {

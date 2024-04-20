@@ -21,6 +21,10 @@ abstract class Api {
 
   @GET('/getEvents')
   Future<MonthResponse> getEventMonth();
+
+//TODO saveEvent
+  @POST('/saveEvent')
+  Future<dynamic> saveEvent(@Body() Events event);
 }
 
 @JsonSerializable()

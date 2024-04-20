@@ -2,6 +2,7 @@
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:test_calendar/2_data/repos/event_repos.dart';
 
 final calendarProvider =
     NotifierProvider<CalendarNotifier, CalendarState>(CalendarNotifier.new);
@@ -21,6 +22,15 @@ class CalendarNotifier extends Notifier<CalendarState> {
     print(
         '#### calendar_provider.dart: setInputEventContent: $inputEventContent');
     state = state.copyWith(inputEventContent: inputEventContent);
+  }
+
+  void saveEvents(int userIndex, DateTime eventTime, String eventContent) {
+    print(
+        '#### calendar_provider.dart: saveEvents: ${state.inputEventContent}');
+    //TODO : save event
+    ref
+        .read(eventRepositoryProvider)
+        .saveEvent(userIndex, eventTime, eventContent);
   }
 }
 
