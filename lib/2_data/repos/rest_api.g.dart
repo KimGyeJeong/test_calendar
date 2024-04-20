@@ -34,6 +34,7 @@ Events _$EventsFromJson(Map<String, dynamic> json) => Events(
       eventUserIndex: json['USER_ID_INDEX'] as int,
       eventTime: DateTime.parse(json['EVENT_DATE'] as String),
       eventContent: json['EVENT_CONTENTS'] as String,
+      eventUserNickname: json['USER_NICKNAME'] as String,
     );
 
 Map<String, dynamic> _$EventsToJson(Events instance) => <String, dynamic>{
@@ -42,6 +43,7 @@ Map<String, dynamic> _$EventsToJson(Events instance) => <String, dynamic>{
       'USER_ID_INDEX': instance.eventUserIndex,
       'EVENT_DATE': instance.eventTime.toIso8601String(),
       'EVENT_CONTENTS': instance.eventContent,
+      'USER_NICKNAME': instance.eventUserNickname,
     };
 
 // **************************************************************************

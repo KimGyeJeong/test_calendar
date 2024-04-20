@@ -63,6 +63,8 @@ class Events {
   final DateTime eventTime;
   @JsonKey(name: 'EVENT_CONTENTS')
   final String eventContent;
+  @JsonKey(name: 'USER_NICKNAME')
+  final String eventUserNickname;
 
   Events({
     required this.month,
@@ -70,6 +72,7 @@ class Events {
     required this.eventUserIndex,
     required this.eventTime,
     required this.eventContent,
+    required this.eventUserNickname,
   });
 
   factory Events.fromJson(Map<String, dynamic> json) => _$EventsFromJson(json);

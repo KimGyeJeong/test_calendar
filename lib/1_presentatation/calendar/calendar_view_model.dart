@@ -80,12 +80,14 @@ class Event {
   final int eventUser;
   DateTime? eventTime;
   final String eventContent;
+  final String eventUserNickname;
   Event({
     required this.month,
     required this.eventIndex,
     required this.eventUser,
     this.eventTime = null,
     required this.eventContent,
+    required this.eventUserNickname,
   });
 }
 

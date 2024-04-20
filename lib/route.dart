@@ -17,12 +17,9 @@ GoRouter router() {
       builder: (context, state) => const test.TestPage(),
     ),
     GoRoute(
-        path: '/calendar',
-        builder: (context, state) => const calendar.CalendarMain(),
-        routes: [
-          GoRoute(
-              path: '222',
-              builder: (context, state) => const calendar.Calendar222()),
-        ])
+      path: '/calendar',
+      builder: (context, state) => const calendar.CalendarMain(),
+      // routes: []
+    )
   ]);
 }

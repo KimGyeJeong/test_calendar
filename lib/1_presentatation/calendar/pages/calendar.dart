@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:test_calendar/1_presentatation/calendar/calendar_view_model.dart';
+import 'package:test_calendar/1_presentatation/calendar/provider/calendar_provider.dart';
 
 class TableBasics extends ConsumerStatefulWidget {
   const TableBasics({super.key});
@@ -21,12 +22,19 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
   DateTime? _selectedDay;
 
   Map<String, List<Event>> events = {};
+  List<Event> eventsForDay = [];
 
   @override
   void initState() {
     super.initState();
     // ref.read(eventProvider.notifier).setEvents();
-    temp();
+
+    //수정
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.read(eventProvider.notifier).setEvents();
+      events = ref.watch(eventProvider).events!;
+    });
+    // getEvents();
   }
 
   @override
@@ -35,7 +43,7 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
     super.dispose();
   }
 
-  Future<void> temp() async {
+  Future<void> getEvents() async {
     print('### tempcalled()');
     ref.read(eventProvider.notifier).setEvents();
     events = ref.watch(eventProvider).events!;
@@ -48,8 +56,6 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
   }
 
   List<Event> getEventsForDay(String day) {
-    String days = day.substring(0, 6);
-
     print('### getEventsForDay : $day');
     // print('### getEventsForDay. : ${events[days]}');
     print('### getEventsForDay. : ${events[day]}');
@@ -79,23 +85,45 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
         SizedBox(
           height: 20,
         ),
-        Text('data : ${events['202404']?.first.eventContent ?? 'no data'}'),
-        SizedBox(
-          height: 20,
-        ),
-        IconButton(
-            onPressed: () {
-              print('#### FLOATING ACTION BUTTON ####');
-              temp();
-              print('#### temp : $events');
-              print('#### temp222 : ${ref.watch(eventProvider).events}');
-            },
-            icon: Icon(Icons.add)),
+        // IconButton(
+        //     onPressed: () {
+        //       print('#### FLOATING ACTION BUTTON ####');
+        //       temp();
+        //       print('#### temp : $events');
+        //       print('#### temp222 : ${ref.watch(eventProvider).events}');
+        //     },
+        //     icon: Icon(Icons.add)),
+        SingleChildScrollView(
+          child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                // return Text('### ${eventsForDay[index].eventContent}');
+                return Center(
+                  child: Row(
+                    children: [
+                      Text(eventsForDay[index].eventUserNickname),
+                      // Text(eventsForDay[index].eventIndex.toString()),
+                      Text(eventsForDay[index].eventUser.toString()),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      // Text(eventsForDay[index].eventTime.toString()),
+                      Text(eventsForDay[index].eventContent),
+                    ],
+                  ),
+                );
+              }),
+              separatorBuilder: (context, index) => SizedBox(
+                    height: 20,
+                  ),
+              itemCount: eventsForDay.length),
+        )
       ],
     );
   }
 
-  TableCalendar<dynamic> Calendar() {
+  // TableCalendar<dynamic> Calendar() {
+  TableCalendar<Event> Calendar() {
     return TableCalendar(
       calendarBuilders: CalendarBuilders(
         // // ADD 2024.04.20
@@ -152,6 +180,11 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
             _selectedDay = selectedDay;
             _focusedDay = focusedDay;
           });
+          ref.read(calendarProvider.notifier).setCalendarTodate(selectedDay);
+
+          print('#### onDaySelected : $selectedDay');
+          eventsForDay =
+              getEventsForDay(DateFormat('yyyyMMdd').format(selectedDay));
         }
       },
       onFormatChanged: (format) {
@@ -167,6 +200,8 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
         print("@@@@ onPageChanged focusedDay : $focusedDay");
         ref.read(eventProvider.notifier).setEvents();
         _focusedDay = focusedDay;
+
+        eventsForDay.clear();
       },
       // locale: 'ko_KR',
       locale: 'en_US',
@@ -199,6 +234,8 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
     );
   }
 }
+
+
 
 // class Event {
 //   final int eventIndex;
