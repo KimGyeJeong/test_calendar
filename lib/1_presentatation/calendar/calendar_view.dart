@@ -98,7 +98,7 @@ class _SetEventState extends ConsumerState<SetEvent> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(DateFormat("yyyy-MM-dd")
+        Text(DateFormat("yyyy-MM-dd hh:mm:ss")
             .format(ref.watch(calendarProvider).selectedDay ?? DateTime.now())),
         SizedBox(height: 20),
         TextField(

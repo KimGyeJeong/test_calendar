@@ -31,6 +31,9 @@ class CalendarNotifier extends Notifier<CalendarState> {
     ref
         .read(eventRepositoryProvider)
         .saveEvent(userIndex, eventTime, eventContent);
+
+    print(
+        '#### calendar_provider.dart: saveEvents: ${state.inputEventContent}');
   }
 }
 
