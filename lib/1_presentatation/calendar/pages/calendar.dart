@@ -94,29 +94,45 @@ class _TableBasicsState extends ConsumerState<TableBasics> {
         //     },
         //     icon: Icon(Icons.add)),
         SingleChildScrollView(
-          child: ListView.separated(
-              shrinkWrap: true,
-              itemBuilder: ((context, index) {
-                // return Text('### ${eventsForDay[index].eventContent}');
-                return Center(
-                  child: Row(
-                    children: [
-                      Text(eventsForDay[index].eventUserNickname),
-                      // Text(eventsForDay[index].eventIndex.toString()),
-                      Text(eventsForDay[index].eventUser.toString()),
-                      SizedBox(
-                        width: 20,
+          // scrollDirection: Axis.vertical,
+          child: Padding(
+            padding: EdgeInsets.all(8.0),
+            child: SafeArea(
+              child: ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: ((context, index) {
+                    // return Text('### ${eventsForDay[index].eventContent}');
+                    return Center(
+                      child: Row(
+                        children: [
+                          Container(
+                              width: 100,
+                              decoration: BoxDecoration(
+                                  color: Colors.orange,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                  child: Text(
+                                      eventsForDay[index].eventUserNickname))),
+                          // Text(eventsForDay[index].eventIndex.toString()),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text(eventsForDay[index].eventUser.toString()),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          // Text(eventsForDay[index].eventTime.toString()),
+                          Text(eventsForDay[index].eventContent),
+                        ],
                       ),
-                      // Text(eventsForDay[index].eventTime.toString()),
-                      Text(eventsForDay[index].eventContent),
-                    ],
-                  ),
-                );
-              }),
-              separatorBuilder: (context, index) => SizedBox(
-                    height: 20,
-                  ),
-              itemCount: eventsForDay.length),
+                    );
+                  }),
+                  separatorBuilder: (context, index) => SizedBox(
+                        height: 20,
+                      ),
+                  itemCount: eventsForDay.length),
+            ),
+          ),
         )
       ],
     );
